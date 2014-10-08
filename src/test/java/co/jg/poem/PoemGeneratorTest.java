@@ -67,6 +67,27 @@ public class PoemGeneratorTest {
         end.getWords().add("\r\n");
     }
 
+//    @Before
+//    public void setUp() throws Exception {
+//        nounDefinition();
+//        prepositionDefinition();
+//        verbDefinition();
+//        endRule();
+//        poem = new Rule("poem");
+//        poem.getElements().add(new Rule("line"));
+//        poem.getElements().add(new Rule("line"));
+//        for (Rule line : poem.getElements()) {
+//            SelectOne line1 = new SelectOne("lineRules");
+//            line1.getElements().add(noun);
+//            line1.getElements().add(preposition);
+//            line1.getElements().add(verb);
+//            line.getElements().add(line1);
+//            Word word = new Word("lineBreak");
+//            word.getWords().add("\n");
+//            line.getElements().add(word);
+//        }
+//    }
+
     @Before
     public void setUp() throws Exception {
         nounDefinition();
@@ -74,18 +95,17 @@ public class PoemGeneratorTest {
         verbDefinition();
         endRule();
         poem = new Rule("poem");
-        poem.getElements().add(new Rule("line"));
-        poem.getElements().add(new Rule("line"));
-        for (Rule line : poem.getElements()) {
-            SelectOne line1 = new SelectOne("lineRules");
-            line1.getElements().add(noun);
-            line1.getElements().add(preposition);
-            line1.getElements().add(verb);
-            line.getElements().add(line1);
-            Word word = new Word("lineBreak");
-            word.getWords().add("\n");
-            line.getElements().add(word);
-        }
+        Rule line = new Rule("line");
+        poem.getElements().add(line);
+        poem.getElements().add(line);
+        SelectOne line1 = new SelectOne("lineRules");
+        line1.getElements().add(noun);
+        line1.getElements().add(preposition);
+        line1.getElements().add(verb);
+        line.getElements().add(line1);
+        Word word = new Word("lineBreak");
+        word.getWords().add("\n");
+        line.getElements().add(word);
     }
 
     @Test
