@@ -32,8 +32,7 @@ public class RuleReader {
                 processRule(rules, line);
             }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            System.out.println(e.getLocalizedMessage());
         }
         return rules.get(0);
     }
@@ -99,7 +98,7 @@ public class RuleReader {
                 selectRule.getElements().add(obtainRule(rules, isolateRuleName(item)));
             } else {
                 Word specialRule = new Word(item);
-                specialRule.getWords().add(item.equals("$LINEBREAK") ? "\n" : "");
+                specialRule.getWords().add("$LINEBREAK".equals(item) ? "\n" : "");
                 selectRule.getElements().add(specialRule);
             }
         }else {
@@ -129,7 +128,7 @@ public class RuleReader {
                 wordRule = new Word(outerRule.getRuleName() + "Words");
                 outerRule.getElements().add(wordRule);
             }
-            wordRule.getWords().add(item.equals("$LINEBREAK") ? "\n" : item);
+            wordRule.getWords().add("$LINEBREAK".equals(item) ? "\n" : item);
         }
     }
 
