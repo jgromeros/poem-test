@@ -8,6 +8,8 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 import co.jg.rules.Rule;
+import co.jg.rules.SelectOne;
+import co.jg.rules.Word;
 
 /**
  * @author juano
@@ -45,23 +47,43 @@ public class RuleReader {
             if (item.contains("|")) {
                 String[] orItems = item.split("\\|");
                 for (String orItem : orItems) {
-                    if (orItem.contains("<") && orItem.contains(">")) {
-                        rule.getElements().add(new Rule(orItem.substring(orItem.indexOf("<") + 1,
-                                        orItem.indexOf(">"))));
-                    } else {
-                        rule.getWords().add(orItem);
-                    }
+                    createInnerOrRule(rule, orItem);
                 }
             } else {
-                if (item.contains("<") && item.contains(">")) {
-                    rule.getElements().add(new Rule(item.substring(item.indexOf("<") + 1,
-                                    item.indexOf(">"))));
-                } else {
-                    rule.getWords().add(item);
-                }
+                createInnerRule(rule, item);
             }
         }
         return rule;
+    }
+
+    private void createInnerOrRule(Rule outerRule, String item) {
+        if (item.contains("<") && item.contains(">")) {
+            SelectOne selectRule = (SelectOne) outerRule.getInnerElementByName(outerRule
+                    .getRuleName() + "Rules");
+            if (selectRule == null) {
+                selectRule = new SelectOne(outerRule.getRuleName() + "Rules");
+                outerRule.getElements().add(selectRule);
+            }
+            selectRule.getElements().add(new Rule(item.substring(item.indexOf("<") + 1,
+                            item.indexOf(">"))));
+        } else {
+            Word wordRule = (Word) outerRule.getInnerElementByName(outerRule
+                    .getRuleName() + "Words");
+            if (wordRule == null) {
+                wordRule = new Word(outerRule.getRuleName() + "Words");
+                outerRule.getElements().add(wordRule);
+            }
+            wordRule.getWords().add(item);
+        }
+    }
+
+    private void createInnerRule(Rule outerRule, String item) {
+        if (item.contains("<") && item.contains(">")) {
+            outerRule.getElements().add(new Rule(item.substring(item.indexOf("<") + 1,
+                            item.indexOf(">"))));
+        } else {
+            outerRule.getWords().add(item);
+        }
     }
 
 }

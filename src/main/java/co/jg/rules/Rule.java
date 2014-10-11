@@ -26,6 +26,21 @@ public class Rule {
         }
     }
 
+    /**
+     * Finds in the list of elements one element with the ruleName equals to the one in the
+     * parameter. If it's found, it's returned. Otherwise returns null.
+     * @param innerName
+     * @return
+     */
+    public Rule getInnerElementByName(String innerName) {
+        for (Rule element : getElements()) {
+            if (innerName.equals(element.getRuleName())) {
+                return element;
+            }
+        }
+        return null;
+    }
+
     public List<Rule> getElements() {
         return elements;
     }
