@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
+import co.jg.poem.utils.RulesUtil;
 import co.jg.rules.Rule;
 import co.jg.rules.SelectOne;
 import co.jg.rules.Word;
@@ -16,13 +17,14 @@ import co.jg.rules.Word;
  */
 public class RuleReader {
 
+    private static final String RULES = "Rules";
     private static final String $LINEBREAK = "$LINEBREAK";
-    private static final String WORDS_SUFFIX = "Words";
 
     /**
      * Reads a file and creates a list of rules by processing each line as a new rule. This method
      * expects that the first rule defined in the file is the root rule. Finally, this method
      * returns the root rule.
+     * 
      * @param fileName
      * @return
      */
@@ -65,8 +67,9 @@ public class RuleReader {
     }
 
     /**
-     * Searches for a rule by its name in the list of rules. If the name is not part of the list
-     * of rules, a new rule is added and returned
+     * Searches for a rule by its name in the list of rules. If the name is not part of the list of
+     * rules, a new rule is added and returned
+     * 
      * @param rules
      * @param ruleName
      * @return
@@ -83,8 +86,9 @@ public class RuleReader {
     }
 
     /**
-     * If the inner rule is part of an or operation it needs to be added to the list of elements
-     * as part of another structure. That structure is a SelectOne rule.
+     * If the inner rule is part of an or operation it needs to be added to the list of elements as
+     * part of another structure. That structure is a SelectOne rule.
+     * 
      * @param rules
      * @param outerRule
      * @param item
@@ -92,58 +96,38 @@ public class RuleReader {
     private void createInnerOrRule(List<Rule> rules, Rule outerRule, String item) {
         if (item.contains("<") && item.contains(">") || item.contains("$")) {
             SelectOne selectRule = (SelectOne) outerRule.getInnerElementByName(outerRule
-                    .getRuleName() + "Rules");
+                    .getRuleName() + RULES);
             if (selectRule == null) {
-                selectRule = new SelectOne(outerRule.getRuleName() + "Rules");
+                selectRule = new SelectOne(outerRule.getRuleName() + RULES);
                 outerRule.getElements().add(selectRule);
             }
             if (!item.contains("$")) {
-                selectRule.getElements().add(obtainRule(rules, isolateRuleName(item)));
+                selectRule.getElements().add(obtainRule(rules, RulesUtil.isolateRuleName(item)));
             } else {
                 Word specialRule = new Word(item);
                 specialRule.getWords().add($LINEBREAK.equals(item) ? "\n" : "");
                 selectRule.getElements().add(specialRule);
             }
-        }else {
-            Word wordRule = (Word) outerRule.getInnerElementByName(outerRule.getRuleName()
-                    + WORDS_SUFFIX);
-            if (wordRule == null) {
-                wordRule = new Word(outerRule.getRuleName() + WORDS_SUFFIX);
-                outerRule.getElements().add(wordRule);
-            }
+        } else {
+            Word wordRule = RulesUtil.createWordRule(outerRule);
             wordRule.getWords().add(item);
         }
     }
 
     /**
      * When the inner rule is not part of an or operation, it can be added by using this method.
+     * 
      * @param rules
      * @param outerRule
      * @param item
      */
     private void createInnerRule(List<Rule> rules, Rule outerRule, String item) {
         if (item.contains("<") && item.contains(">")) {
-            outerRule.getElements().add(obtainRule(rules, isolateRuleName(item)));
+            outerRule.getElements().add(obtainRule(rules, RulesUtil.isolateRuleName(item)));
         } else {
-            Word wordRule = (Word) outerRule.getInnerElementByName(outerRule.getRuleName()
-                    + WORDS_SUFFIX);
-            if (wordRule == null) {
-                wordRule = new Word(outerRule.getRuleName() + WORDS_SUFFIX);
-                outerRule.getElements().add(wordRule);
-            }
+            Word wordRule = RulesUtil.createWordRule(outerRule);
             wordRule.getWords().add($LINEBREAK.equals(item) ? "\n" : item);
         }
-    }
-
-    /**
-     * While reading the rule names are splitted with tokens "<" and ">". This method isolates the
-     * rule name and returns it without those tokens.
-     * The tokens must be at the beginning and at the end of the parameter
-     * @param item
-     * @return
-     */
-    private String isolateRuleName(String item) {
-        return item.substring(item.indexOf("<") + 1, item.indexOf(">"));
     }
 
 }
