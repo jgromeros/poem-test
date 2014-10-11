@@ -16,6 +16,9 @@ import co.jg.rules.Word;
  */
 public class RuleReader {
 
+    private static final String $LINEBREAK = "$LINEBREAK";
+    private static final String WORDS_SUFFIX = "Words";
+
     /**
      * Reads a file and creates a list of rules by processing each line as a new rule. This method
      * expects that the first rule defined in the file is the root rule. Finally, this method
@@ -98,14 +101,14 @@ public class RuleReader {
                 selectRule.getElements().add(obtainRule(rules, isolateRuleName(item)));
             } else {
                 Word specialRule = new Word(item);
-                specialRule.getWords().add("$LINEBREAK".equals(item) ? "\n" : "");
+                specialRule.getWords().add($LINEBREAK.equals(item) ? "\n" : "");
                 selectRule.getElements().add(specialRule);
             }
         }else {
             Word wordRule = (Word) outerRule.getInnerElementByName(outerRule.getRuleName()
-                    + "Words");
+                    + WORDS_SUFFIX);
             if (wordRule == null) {
-                wordRule = new Word(outerRule.getRuleName() + "Words");
+                wordRule = new Word(outerRule.getRuleName() + WORDS_SUFFIX);
                 outerRule.getElements().add(wordRule);
             }
             wordRule.getWords().add(item);
@@ -123,12 +126,12 @@ public class RuleReader {
             outerRule.getElements().add(obtainRule(rules, isolateRuleName(item)));
         } else {
             Word wordRule = (Word) outerRule.getInnerElementByName(outerRule.getRuleName()
-                    + "Words");
+                    + WORDS_SUFFIX);
             if (wordRule == null) {
-                wordRule = new Word(outerRule.getRuleName() + "Words");
+                wordRule = new Word(outerRule.getRuleName() + WORDS_SUFFIX);
                 outerRule.getElements().add(wordRule);
             }
-            wordRule.getWords().add("$LINEBREAK".equals(item) ? "\n" : item);
+            wordRule.getWords().add($LINEBREAK.equals(item) ? "\n" : item);
         }
     }
 
