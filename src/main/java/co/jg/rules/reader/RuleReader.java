@@ -12,7 +12,8 @@ import co.jg.rules.SelectOne;
 import co.jg.rules.Word;
 
 /**
- * @author juano
+ * Reads a file and creates a structure for the rules.
+ * @author Juan Gabriel Romero
  */
 public class RuleReader {
 
@@ -41,8 +42,7 @@ public class RuleReader {
     }
 
     /**
-     * Process one line to create one rule and adds it to the rules parameter.
-     * 
+     * Processes one line to create one rule.
      * @param rules
      * @param line
      */
@@ -104,7 +104,7 @@ public class RuleReader {
                 specialRule.getWords().add($LINEBREAK.equals(item) ? "\n" : "");
                 selectRule.getElements().add(specialRule);
             }
-        }else {
+        } else {
             Word wordRule = (Word) outerRule.getInnerElementByName(outerRule.getRuleName()
                     + WORDS_SUFFIX);
             if (wordRule == null) {

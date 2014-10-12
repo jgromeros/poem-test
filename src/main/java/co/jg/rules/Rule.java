@@ -3,26 +3,43 @@ package co.jg.rules;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Base class that represents rules defined for the creation of poems. Rules are identified by its
+ * ruleName
+ * @author Juan Gabriel Romero
+ */
 public class Rule {
 
     private List<Rule> elements;
     private List<String> words;
     private String ruleName;
 
+    /**
+     * Empty constructor. It instantiates the lists that compose a rule.
+     */
     public Rule() {
         elements = new ArrayList<Rule>();
         words = new ArrayList<String>();
     }
 
+    /**
+     * Constructor that assigns the rule name. It instantiates the lists that compose a rule.
+     */
     public Rule(String ruleName) {
         elements = new ArrayList<Rule>();
         words = new ArrayList<String>();
         this.ruleName = ruleName;
     }
 
-    public void processRule() {
+    /**
+     * Creates the poem by making recursive calls to its inner rules (rules that are part of the
+     * definition of the rule). Since its implemented through recursive calls, the poem is
+     * iteratively created by appending to the parameter.
+     * @param poem
+     */
+    public void processRule(StringBuilder poem) {
         for (Rule element : getElements()) {
-            element.processRule();
+            element.processRule(poem);
         }
     }
 

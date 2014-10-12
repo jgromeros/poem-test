@@ -17,7 +17,7 @@ import co.jg.rules.reader.RuleReader;
 
 public class PoemGeneratorTest {
 
-    private Rule poem;
+    private Rule poemRule;
     private Rule noun = new Rule("noun");
     private Rule preposition = new Rule("preposition");
     private Rule verb = new Rule("verb");
@@ -71,7 +71,7 @@ public class PoemGeneratorTest {
     @Before
     public void setUp() throws Exception {
         RuleReader reader = new RuleReader();
-        poem = reader.buildRules("src/test/resources/rules.txt");
+        poemRule = reader.buildRules("src/test/resources/rules.txt");
     }
 
 //    @Before
@@ -96,7 +96,8 @@ public class PoemGeneratorTest {
 
     @Test
     public void test() {
-        poem.processRule();
+        StringBuilder poem = new StringBuilder();
+        poemRule.processRule(poem);
     }
 
 }

@@ -11,7 +11,9 @@ public class PoemGenerator {
     public static void main(String[] args) {
         RuleReader reader = new RuleReader();
         Rule rule = reader.buildRules("src/test/resources/rules.txt");
-        rule.processRule();
+        StringBuilder poem = new StringBuilder();
+        rule.processRule(poem);
+        System.out.println(poem.toString());
     }
 
 }
