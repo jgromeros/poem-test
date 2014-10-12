@@ -1,19 +1,13 @@
 package co.jg.poem;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertFalse;
 
-import java.util.ArrayList;
-
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import co.jg.rules.Rule;
 import co.jg.rules.SelectOne;
 import co.jg.rules.Word;
-import co.jg.rules.reader.RuleReader;
 
 public class PoemGeneratorTest {
 
@@ -70,34 +64,29 @@ public class PoemGeneratorTest {
 
     @Before
     public void setUp() throws Exception {
-        RuleReader reader = new RuleReader();
-        poemRule = reader.buildRules("src/test/resources/rules.txt");
+        nounDefinition();
+        prepositionDefinition();
+        verbDefinition();
+        endRule();
+        poemRule = new Rule("poem");
+        Rule line = new Rule("line");
+        poemRule.getElements().add(line);
+        poemRule.getElements().add(line);
+        SelectOne line1 = new SelectOne("lineRules");
+        line1.getElements().add(noun);
+        line1.getElements().add(preposition);
+        line1.getElements().add(verb);
+        line.getElements().add(line1);
+        Word word = new Word("lineBreak");
+        word.getWords().add("\n");
+        line.getElements().add(word);
     }
-
-//    @Before
-//    public void setUp() throws Exception {
-//        nounDefinition();
-//        prepositionDefinition();
-//        verbDefinition();
-//        endRule();
-//        poem = new Rule("poem");
-//        Rule line = new Rule("line");
-//        poem.getElements().add(line);
-//        poem.getElements().add(line);
-//        SelectOne line1 = new SelectOne("lineRules");
-//        line1.getElements().add(noun);
-//        line1.getElements().add(preposition);
-//        line1.getElements().add(verb);
-//        line.getElements().add(line1);
-//        Word word = new Word("lineBreak");
-//        word.getWords().add("\n");
-//        line.getElements().add(word);
-//    }
 
     @Test
     public void test() {
         StringBuilder poem = new StringBuilder();
         poemRule.processRule(poem);
+        assertFalse(poem.toString().isEmpty());
     }
 
 }
