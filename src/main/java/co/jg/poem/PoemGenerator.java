@@ -11,6 +11,12 @@ import co.jg.rules.reader.RuleReader;
 public class PoemGenerator {
 
     /**
+     * Since the only method of this class is static. This class should not be instantiated.
+     */
+    private PoemGenerator() {
+    }
+
+    /**
      * Main method. Executes the application args[0] is the location of the file that describe the
      * rules for the poem generation.
      * @param args

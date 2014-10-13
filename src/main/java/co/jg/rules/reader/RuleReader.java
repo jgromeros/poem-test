@@ -7,10 +7,11 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
-import co.jg.poem.utils.RulesUtil;
+import co.jg.exceptions.RuleException;
 import co.jg.rules.Rule;
 import co.jg.rules.SelectOne;
 import co.jg.rules.Word;
+import co.jg.rules.utils.RulesUtil;
 
 /**
  * Reads a file and creates a structure for the rules.
@@ -38,7 +39,7 @@ public class RuleReader {
                 processRule(rules, line);
             }
         } catch (IOException e) {
-            System.out.println(e.getLocalizedMessage());
+            throw new RuleException("There was a problem reading the rules file", e);
         }
         return rules.get(0);
     }

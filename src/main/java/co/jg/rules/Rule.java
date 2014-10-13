@@ -3,6 +3,8 @@ package co.jg.rules;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.jg.exceptions.RuleException;
+
 /**
  * Base class that represents rules defined for the creation of poems. Rules are identified by its
  * ruleName
@@ -36,8 +38,12 @@ public class Rule {
      * definition of the rule). Since its implemented through recursive calls, the poem is
      * iteratively created by appending to the parameter.
      * @param poem
+     * @throws RuleException 
      */
     public void processRule(StringBuilder poem) {
+        if (getElements().isEmpty()) {
+            throw new RuleException("The rule has no definition");
+        }
         for (Rule element : getElements()) {
             element.processRule(poem);
         }

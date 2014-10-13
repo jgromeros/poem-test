@@ -1,10 +1,13 @@
 package co.jg.poem;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import co.jg.exceptions.RuleException;
 import co.jg.rules.Rule;
 import co.jg.rules.SelectOne;
 import co.jg.rules.Word;
@@ -68,6 +71,10 @@ public class PoemGeneratorTest {
         prepositionDefinition();
         verbDefinition();
         endRule();
+    }
+
+    @Test
+    public void testGeneration() {
         poemRule = new Rule("poem");
         Rule line = new Rule("line");
         poemRule.getElements().add(line);
@@ -80,13 +87,30 @@ public class PoemGeneratorTest {
         Word word = new Word("lineBreak");
         word.getWords().add("\n");
         line.getElements().add(word);
-    }
-
-    @Test
-    public void test() {
         StringBuilder poem = new StringBuilder();
         poemRule.processRule(poem);
         assertFalse(poem.toString().isEmpty());
+    }
+
+    @Test
+    public void testGenerationWrongRules() {
+        poemRule = new Rule("poem");
+        Rule line = new Rule("line");
+        poemRule.getElements().add(line);
+        poemRule.getElements().add(line);
+        SelectOne line1 = new SelectOne("lineRules");
+        line1.getElements().add(new Rule("wrong-rule"));
+        line.getElements().add(line1);
+        Word word = new Word("lineBreak");
+        word.getWords().add("\n");
+        line.getElements().add(word);
+        StringBuilder poem = new StringBuilder();
+        try {
+            poemRule.processRule(poem);
+            fail("Expected exception not thrown");
+        } catch (RuleException e) {
+            assertEquals("The rule has no definition", e.getMessage());
+        }
     }
 
 }

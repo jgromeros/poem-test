@@ -1,4 +1,4 @@
-package co.jg.poem.utils;
+package co.jg.rules.utils;
 
 import co.jg.rules.Rule;
 import co.jg.rules.Word;
